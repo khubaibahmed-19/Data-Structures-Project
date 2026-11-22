@@ -1,7 +1,4 @@
-#ifndef QUEUE_H
-#define QUEUE_H
-
-#define QUEUE_EMPTY -1
+#pragma once
 
 class Queue 
 {
@@ -31,5 +28,3 @@ public:
     int  size() const;         
     void clear();              
 };
-
-#endif

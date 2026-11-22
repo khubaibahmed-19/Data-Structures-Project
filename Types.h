@@ -1,5 +1,4 @@
-#ifndef TYPES_H
-#define TYPES_H
+#pragma once
 #include<string>
 
 // Invalid
@@ -62,4 +61,3 @@ std::string robotStateName(int s);
 std::string requestStateName(int s);
 std::string categoryName(int c);
 
-#endif

@@ -84,7 +84,7 @@ int LinkedList::peekKey() const
 {
     if (head == nullptr) 
     {
-        return LIST_EMPTY;
+        return -1;
     }
     return head->key;
 }
@@ -93,7 +93,7 @@ int LinkedList::peekValue() const
 {
     if (head == nullptr) 
     {
-        return LIST_EMPTY;
+        return -1;
     }
     return head->value;
 }
@@ -102,7 +102,7 @@ int LinkedList::popFront()
 {
     if (head == nullptr) 
     {
-        return LIST_EMPTY;
+        return -1;
     }
 
     Node* old = head;

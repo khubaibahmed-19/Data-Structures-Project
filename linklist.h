@@ -1,7 +1,4 @@
-#ifndef LINKLIST_H
-#define LINKLIST_H
-
-#define LIST_EMPTY -1
+#pragma once
 
 class LinkedList 
 {
@@ -33,5 +30,3 @@ public:
     int size() const;
     void clear();
 };
-
-#endif

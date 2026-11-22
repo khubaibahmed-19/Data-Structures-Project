@@ -1,3 +1,4 @@
+
 #include"Types.h"
 using namespace std;
 int parseLocationType(string s){

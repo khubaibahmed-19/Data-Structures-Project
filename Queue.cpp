@@ -77,7 +77,7 @@ int Queue::dequeue()
 {
     if (head == nullptr) 
     {
-        return QUEUE_EMPTY;
+        return -1;
     }
 
     Node* old = head;
@@ -98,7 +98,7 @@ int Queue::front() const
 {
     if (head == nullptr) 
     {
-        return QUEUE_EMPTY;
+        return -1;
     }
     return head->value;
 }

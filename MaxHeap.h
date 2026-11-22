@@ -1,5 +1,4 @@
-#ifndef MAXHEAP_H
-#define MAXHEAP_H
+#pragma once
 struct ReqItem{
     int id;
     int urgency;
@@ -36,4 +35,3 @@ public:
     bool isEmpty();
     int getSize();
 };
-#endif
