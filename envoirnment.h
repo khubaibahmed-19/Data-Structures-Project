@@ -1,7 +1,7 @@
 #pragma once
 #include<string>
 #include"Types.h"
-#include"MinHeap.h"
+#include"Minheap.h"
 #include"Queue.h"
 
 using namespace std;
@@ -46,6 +46,13 @@ public:
     int getLocationType(int id);
     bool isStationUp(int id);
     int getNumLocations();
+    int roadCost(int from,int to);
+    string getLocationName(int id);
+    int getNumConnections();
+    int getConnectionStatus(int connId);
+    int getConnectionCost(int connId);
+    int getConnectionA(int connId);
+    int getConnectionB(int connId);
 
     void dijkstra(int src,int* dist,int* prev);
     int shortestPath(int from,int to,Queue& path);

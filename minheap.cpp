@@ -1,4 +1,4 @@
-#include"MinHeap.h"
+#include"Minheap.h"
 MinHeap::MinHeap(int cap){
     arr=new HeapItem [cap];
     size=0;

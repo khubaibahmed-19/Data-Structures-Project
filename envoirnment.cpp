@@ -10,6 +10,17 @@ Environment::Environment(int nLoc,int nConn){
     connB=new int [numConnections+1];
     connCost=new int[numConnections+1];
     connStatus=new int[numConnections+1];
+    for(int i=0;i<=numLocations;i++){
+        adj[i]=nullptr;
+        stationUp[i]=true;
+        locType[i]=JUNCTION;
+    }
+    for(int i=0;i<=numConnections;i++){
+        connStatus[i]=BLOCKED;
+        connA[i]=0;
+        connB[i]=0;
+        connCost[i]=0;
+    }
 }
 void Environment::addEdge(int from,int to, int connId,int cost){
     Edge *e = new Edge;
@@ -54,16 +65,27 @@ void Environment::addConnection(int id,int a,int b,int cost,int status){
     connStatus[id]=status;
 }
 void Environment::blockConnection(int connId){
+    if(connId<1||connId>numConnections){
+        return;
+    }
     connStatus[connId]=BLOCKED;
 }
 void Environment::unblockConnection(int connId){
+    if(connId<1||connId>numConnections){
+        return;
+    }
     connStatus[connId]=OPEN;
 }
 void Environment::setStationUp(int LocId,bool up){
-    locType[LocId]=CHARGING;
+    if(!isValidLocation(LocId)){
+        return;
+    }
     stationUp[LocId]=up;
 }
 bool Environment::isOpen(int from,int to){
+    if(!isValidLocation(from)||!isValidLocation(to)){
+        return false;
+    }
     Edge* e=adj[from];
     while(e!=nullptr){
         if(e->to==to&&connStatus[e->connId]==OPEN){
@@ -77,19 +99,72 @@ bool Environment::isValidLocation(int id){
     return id>=1&&id<=numLocations;
 }
 int Environment::getLocationType(int id){
+    if(!isValidLocation(id)){
+        return INVALID;
+    }
     return locType[id];
 }
 bool Environment::isStationUp(int id){
+    if(!isValidLocation(id)){
+        return false;
+    }
     return stationUp[id]&&locType[id]==CHARGING;
 }
 int Environment::getNumLocations(){
     return numLocations;
+}
+int Environment::roadCost(int from,int to){
+    if(!isValidLocation(from)||!isValidLocation(to)){
+        return INVALID;
+    }
+    Edge* e=adj[from];
+    while(e!=nullptr){
+        if(e->to==to&&connStatus[e->connId]==OPEN){
+            return e->cost;
+        }
+        e=e->next;
+    }
+    return INVALID;
+}
+string Environment::getLocationName(int id){
+    if(!isValidLocation(id)){
+        return "";
+    }
+    return locName[id];
+}
+int Environment::getNumConnections(){
+    return numConnections;
+}
+int Environment::getConnectionStatus(int connId){
+    if(connId<1||connId>numConnections){
+        return INVALID;
+    }
+    return connStatus[connId];
+}
+int Environment::getConnectionCost(int connId){
+    if(connId<1||connId>numConnections){
+        return INVALID;
+    }
+    return connCost[connId];
+}
+int Environment::getConnectionA(int connId){
+    if(connId<1||connId>numConnections){
+        return INVALID;
+    }
+    return connA[connId];
+}
+int Environment::getConnectionB(int connId){
+    if(connId<1||connId>numConnections){
+        return INVALID;
+    }
+    return connB[connId];
 }
 void Environment::dijkstra(int src,int* dist,int* prev){
     for(int i=1;i<=numLocations;i++){
         dist[i]=-1;
         prev[i]=-1;
     }
+    dist[src]=0;
     MinHeap heap;
     heap.insert(src,0);
     while(!heap.isEmpty()){
@@ -111,6 +186,10 @@ void Environment::dijkstra(int src,int* dist,int* prev){
     }
 }
 int Environment::shortestPath(int from,int to,Queue& path){
+    if(!isValidLocation(from)||!isValidLocation(to)){
+        path.clear();
+        return INVALID;
+    }
     int *dist=new int[numLocations+1];
     int *prev=new int[numLocations+1];
     dijkstra(from,dist,prev);
@@ -145,6 +224,10 @@ int Environment::shortestPath(int from,int to,Queue& path){
     return d;
 }
 int Environment::nearestCharger(int from,Queue& path){
+    if(!isValidLocation(from)){
+        path.clear();
+        return INVALID;
+    }
     int *dist=new int[numLocations+1];
     int *prev=new int[numLocations+1];
     dijkstra(from,dist,prev);
