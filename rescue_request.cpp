@@ -1,55 +1,238 @@
-#pragma once
-#include "Types.h"
+#include "rescue_request.h"
 
-const int URGENCY_MIN = 1;
-const int URGENCY_MAX = 5;
-
-class RescueRequest
+RescueRequest::RescueRequest()
 {
-private:
-    int id;
-    int reportTime;
-    int place;
-    int category;
-    int urgency;
-    int duration;
-    int state;
-    bool reported;
-    int robotId;
-    int workDone;
-    int version;
-    int startStep;
-    int finishStep;
+    id = INVALID;
+    reportTime = 0;
+    place = INVALID;
+    category = INVALID;
+    urgency = URGENCY_MIN;
+    duration = 1;
+    state = PENDING;
+    reported = false;
+    robotId = INVALID;
+    workDone = 0;
+    version = 0;
+    startStep = -1;
+    finishStep = -1;
+}
 
-public:
-    RescueRequest();
-    void init(int id, int reportTime, int place, int category, int urgency, int duration);
+void RescueRequest::init(int newId, int newTime, int newPlace, int newCategory, int newUrgency, int newDuration)
+{
+    id = newId;
+    reportTime = newTime;
+    place = newPlace;
+    category = newCategory;
+    urgency = newUrgency;
+    duration = newDuration;
+    state = PENDING;
+    reported = false;
+    robotId = INVALID;
+    workDone = 0;
+    version = 0;
+    startStep = -1;
+    finishStep = -1;
+}
 
-    int getId() const;
-    int getReportTime() const;
-    int getPlace() const;
-    int getCategory() const;
-    int getUrgency() const;
-    int getDuration() const;
-    int getState() const;
-    bool isReported() const;
-    int getRobotId() const;
-    int getWorkDone() const;
-    int getVersion() const;
-    int getStartStep() const;
-    int getFinishStep() const;
-    int responseTime() const;
+int RescueRequest::getId() const
+{
+    return id;
+}
 
-    bool changeState(int newState);
+int RescueRequest::getReportTime() const
+{
+    return reportTime;
+}
 
-    bool report();
-    bool assign(int robot);
-    bool startWork(int step);
-    bool doWork();
-    bool complete(int step);
-    bool fail(int step);
-    bool release();
-    bool setUrgency(int u);
+int RescueRequest::getPlace() const
+{
+    return place;
+}
 
-    bool isFinal() const;
-};
+int RescueRequest::getCategory() const
+{
+    return category;
+}
+
+int RescueRequest::getUrgency() const
+{
+    return urgency;
+}
+
+int RescueRequest::getDuration() const
+{
+    return duration;
+}
+
+int RescueRequest::getState() const
+{
+    return state;
+}
+
+bool RescueRequest::isReported() const
+{
+    return reported;
+}
+
+int RescueRequest::getRobotId() const
+{
+    return robotId;
+}
+
+int RescueRequest::getWorkDone() const
+{
+    return workDone;
+}
+
+int RescueRequest::getVersion() const
+{
+    return version;
+}
+
+int RescueRequest::getStartStep() const
+{
+    return startStep;
+}
+
+int RescueRequest::getFinishStep() const
+{
+    return finishStep;
+}
+
+int RescueRequest::responseTime() const
+{
+    if (state != COMPLETED)
+    {
+        return -1;
+    }
+    return finishStep - reportTime;
+}
+
+bool RescueRequest::changeState(int newState)
+{
+    bool ok = false;
+    if (state == PENDING)
+    {
+        ok = (newState == ASSIGNED || newState == FAILED);
+    }
+    else if (state == ASSIGNED)
+    {
+        ok = (newState == IN_PROGRESS || newState == PENDING);
+    }
+    else if (state == IN_PROGRESS)
+    {
+        ok = (newState == COMPLETED || newState == PENDING);
+    }
+
+    if (ok)
+    {
+        state = newState;
+    }
+    return ok;
+}
+
+bool RescueRequest::report()
+{
+    if (reported)
+    {
+        return false;
+    }
+    reported = true;
+    return true;
+}
+
+bool RescueRequest::assign(int robot)
+{
+    if (!reported || robot == INVALID || robotId != INVALID)
+    {
+        return false;
+    }
+    if (!changeState(ASSIGNED))
+    {
+        return false;
+    }
+    robotId = robot;
+    return true;
+}
+
+bool RescueRequest::startWork(int step)
+{
+    if (!changeState(IN_PROGRESS))
+    {
+        return false;
+    }
+    startStep = step;
+    workDone = 0;
+    return true;
+}
+
+bool RescueRequest::doWork()
+{
+    if (state != IN_PROGRESS)
+    {
+        return false;
+    }
+    if (workDone < duration)
+    {
+        workDone++;
+    }
+    return workDone >= duration;
+}
+
+bool RescueRequest::complete(int step)
+{
+    if (workDone < duration)
+    {
+        return false;
+    }
+    if (!changeState(COMPLETED))
+    {
+        return false;
+    }
+    finishStep = step;
+    return true;
+}
+
+bool RescueRequest::fail(int step)
+{
+    if (!changeState(FAILED))
+    {
+        return false;
+    }
+    finishStep = step;
+    return true;
+}
+
+bool RescueRequest::release()
+{
+    if (state != ASSIGNED && state != IN_PROGRESS)
+    {
+        return false;
+    }
+    changeState(PENDING);
+    robotId = INVALID;
+    workDone = 0;
+    startStep = -1;
+    version++;
+    return true;
+}
+
+bool RescueRequest::setUrgency(int u)
+{
+    if (u < URGENCY_MIN || u > URGENCY_MAX)
+    {
+        return false;
+    }
+    if (isFinal())
+    {
+        return false;
+    }
+    urgency = u;
+    version++;
+    return true;
+}
+
+bool RescueRequest::isFinal() const
+{
+    return state == COMPLETED || state == FAILED;
+}
