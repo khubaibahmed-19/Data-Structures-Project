@@ -85,3 +85,89 @@ bool Environment::isStationUp(int id){
 int Environment::getNumLocations(){
     return numLocations;
 }
+void Environment::dijkstra(int src,int* dist,int* prev){
+    for(int i=1;i<=numLocations;i++){
+        dist[i]=-1;
+        prev[i]=-1;
+    }
+    MinHeap heap;
+    heap.insert(src,0);
+    while(!heap.isEmpty()){
+        HeapItem cur=heap.extractMin();
+        if(cur.dist>dist[cur.vertex]){
+            continue;
+        }
+        Edge *now=adj[cur.vertex];
+        while(now!=nullptr){
+            if(connStatus[now->connId]==OPEN){
+                int newDist=now->cost+dist[cur.vertex];
+                if(dist[now->to]==-1||dist[now->to]>newDist){
+                    dist[now->to]=newDist;
+                    prev[now->to]=cur.vertex;
+                }
+            }
+            now=now->next;
+        }
+    }
+}
+int Environment::shortestPath(int from,int to,Queue& path){
+    int *dist=new int[numLocations+1];
+    int *prev=new int[numLocations+1];
+    dijkstra(from,dist,prev);
+    path.clear();
+    if(dist[to]==-1){
+        delete []dist;
+        delete []prev;
+        return -1;
+    }
+    if(from==to){
+        delete []dist;
+        delete []prev;
+        return 0;
+    }
+    int* temp=new int [numLocations];
+    int trav=prev[to];
+    int i=1;
+    temp[0]=to;
+    temp[i]=trav;
+    while(trav!=from){
+        trav=prev[temp[i]];
+        i++;
+        temp[i]=trav;
+    }
+    for(int k=i-1;k>=0;k--){
+        path.enqueue(temp[k]);
+    }
+    int d=dist[to];
+    delete []dist;
+    delete []prev;
+    delete []temp;
+    return d;
+}
+int Environment::nearestCharger(int from,Queue& path){
+    int *dist=new int[numLocations+1];
+    int *prev=new int[numLocations+1];
+    dijkstra(from,dist,prev);
+    int best=-1;
+    for(int x=1;x<=numLocations;x++){
+        if(locType[x]!=CHARGING){
+            continue;
+        }
+        if(!stationUp[x]){
+            continue;
+        }
+        if(dist[x]==-1){
+            continue;
+        }
+        if(best==-1||dist[x]<dist[best]){
+            best=x;
+        }
+    }
+    delete []dist;
+    delete []prev;
+    if(best==-1){
+        path.clear();
+        return -1;
+    }
+    return shortestPath(from,best,path);
+}

@@ -2,7 +2,7 @@
 #include<string>
 #include"Types.h"
 #include"MinHeap.h"
-#include"linklist.h"
+#include"Queue.h"
 
 using namespace std;
 
@@ -48,6 +48,6 @@ public:
     int getNumLocations();
 
     void dijkstra(int src,int* dist,int* prev);
-    int shortestPath(int from,int to,LinkedList& path);
-    int nearestCharger(int from,LinkedList& path);
+    int shortestPath(int from,int to,Queue& path);
+    int nearestCharger(int from,Queue& path);
 };
