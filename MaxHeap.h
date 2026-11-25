@@ -3,6 +3,8 @@ struct ReqItem{
     int id;
     int urgency;
     int reportTime;
+    int index;
+    int version;
 };
 class MaxHeap{
 private:
