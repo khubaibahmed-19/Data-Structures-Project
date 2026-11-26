@@ -179,6 +179,7 @@ void Environment::dijkstra(int src,int* dist,int* prev){
                 if(dist[now->to]==-1||dist[now->to]>newDist){
                     dist[now->to]=newDist;
                     prev[now->to]=cur.vertex;
+                    heap.insert(now->to,newDist);
                 }
             }
             now=now->next;

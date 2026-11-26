@@ -56,7 +56,7 @@ ROBOTS 4
 1 8 MEDICAL 100 100
 2 2 MEDICAL 100 100
 3 1 FIRE 120 120
-4 6 FIRE 120 120
+4 6 GENERAL 120 120
 
 REQUESTS 10
 # <id> <report_time> <location> <category> <urgency> <duration_steps>

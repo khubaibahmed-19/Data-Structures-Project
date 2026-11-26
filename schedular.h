@@ -28,8 +28,8 @@ private:
 public:
     Scheduler(Environment* env,Robot* robots,int robotCount,RescueRequest* requests,int requestCount,Logger* logger,int batteryPerCost,int batteryPerWork);
     ~Scheduler();
-    Scheduler(const Scheduler&)=delete;
-    Scheduler& operator=(const Scheduler&) ;
+    Scheduler(const Scheduler& other);
+    Scheduler& operator=(const Scheduler& other);
 
     void addRequest(int reqIdx);
     int assign(int step);

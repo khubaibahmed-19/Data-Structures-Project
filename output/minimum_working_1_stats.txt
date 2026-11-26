@@ -1,0 +1,29 @@
+===== Final statistics: minimum_working_1 =====
+Steps run:              192
+Requests total:         60
+Requests completed:     60
+Requests failed:        0
+Requests left:          0
+Average response time:  17.93 steps
+Longest response time:  111 steps
+Total cost moved:       830
+Total battery used:     1428
+Conflicts:              35
+Reroutes:               0
+Releases:               1
+Run time:               5.00 ms
+
+Robot utilisation (busy steps / steps run):
+  Robot 1 (MEDICAL): 90 busy steps, 46.88%
+  Robot 2 (MEDICAL): 95 busy steps, 49.48%
+  Robot 3 (MEDICAL): 90 busy steps, 46.88%
+  Robot 4 (FIRE): 63 busy steps, 32.81%
+  Robot 5 (FIRE): 44 busy steps, 22.92%
+  Robot 6 (SUPPLY): 50 busy steps, 26.04%
+  Robot 7 (SUPPLY): 50 busy steps, 26.04%
+  Robot 8 (SEARCH): 88 busy steps, 45.83%
+  Robot 9 (SEARCH): 63 busy steps, 32.81%
+  Robot 10 (GENERAL): 112 busy steps, 58.33%
+  Robot 11 (GENERAL): 125 busy steps, 65.10%
+  Robot 12 (GENERAL): 106 busy steps, 55.21%
+Average utilisation:    42.36%

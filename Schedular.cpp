@@ -89,6 +89,14 @@ bool Scheduler::enoughBattery(int robotIdx,int travelCost,int duration){
 }
 int Scheduler::pickRobot(int reqIdx,int& travelCost,int& candidates){
     env->dijkstra(requests[reqIdx].getPlace(),dist,prev);
+    int reserve=0;
+    for(int x=1;x<=env->getNumLocations();x++){
+        if(env->isStationUp(x)&&dist[x]!=-1){
+            if(reserve==0||dist[x]<reserve){
+                reserve=dist[x];
+            }
+        }
+    }
     int best=-1;
     travelCost=-1;
     candidates=0;
@@ -106,7 +114,7 @@ int Scheduler::pickRobot(int reqIdx,int& travelCost,int& candidates){
         if(d==-1){
             continue;
         }
-        if(!enoughBattery(i,d,requests[reqIdx].getDuration())){
+        if(!enoughBattery(i,d+reserve,requests[reqIdx].getDuration())){
             continue;
         }
         candidates++;
