@@ -1,0 +1,139 @@
+# =====================================================================
+# AI Rescue Robots - Scenario 4 (Edge Cases)
+# Data Structures Lab, Fall 2026 (DS, AI)
+# Isolated location, road closing mid-trip, whole fleet offline, same-time ties,
+# charging stations down while a low-battery robot needs them, urgency raised for request 10.
+# Location 20 is cut off until connection 28 reopens at step 60 (request 6 waits).
+# Same format as scenario_provided.txt. Connections are undirected.
+# =====================================================================
+SCENARIO edge_4
+
+# PARAM <key> <value>
+PARAM max_steps 120
+PARAM speed 1
+PARAM battery_per_cost_unit 1
+PARAM battery_per_work_step 2
+PARAM recharge_per_step 5
+
+LOCATIONS 20
+# <id> <name> <type>
+1 Command_Center COMMAND
+2 Junction_1 JUNCTION
+3 Building_1 BUILDING
+4 Junction_2 JUNCTION
+5 Hospital_1 HOSPITAL
+6 Charging_Station_1 CHARGING
+7 Building_2 BUILDING
+8 Building_3 BUILDING
+9 Hospital_2 HOSPITAL
+10 Charging_Station_2 CHARGING
+11 Building_4 BUILDING
+12 Junction_3 JUNCTION
+13 Supply_Depot_1 DEPOT
+14 Junction_4 JUNCTION
+15 Supply_Depot_2 DEPOT
+16 Charging_Station_3 CHARGING
+17 Building_5 BUILDING
+18 Building_6 BUILDING
+19 Building_7 BUILDING
+20 Junction_5 JUNCTION
+
+CONNECTIONS 35
+# <id> <location_a> <location_b> <cost> <OPEN|BLOCKED>
+1 1 2 3 OPEN
+2 1 5 3 OPEN
+3 2 3 4 OPEN
+4 2 6 3 OPEN
+5 3 4 9 OPEN
+6 3 7 3 OPEN
+7 4 8 5 OPEN
+8 5 6 7 OPEN
+9 5 9 5 OPEN
+10 6 7 9 OPEN
+11 6 10 1 OPEN
+12 7 8 5 OPEN
+13 7 11 6 OPEN
+14 8 12 9 OPEN
+15 9 10 4 OPEN
+16 9 13 2 OPEN
+17 10 11 1 OPEN
+18 10 14 5 OPEN
+19 11 12 2 OPEN
+20 11 15 7 OPEN
+21 12 16 8 OPEN
+22 13 14 7 OPEN
+23 13 17 3 OPEN
+24 14 15 9 OPEN
+25 14 18 7 OPEN
+26 15 16 2 OPEN
+27 15 19 9 OPEN
+28 16 20 4 BLOCKED
+29 17 18 5 OPEN
+30 18 19 1 OPEN
+31 19 20 9 BLOCKED
+32 9 18 4 OPEN
+33 14 17 8 OPEN
+34 8 16 5 OPEN
+35 9 15 5 OPEN
+
+ROBOTS 5
+# <id> <start_location> <capability> <max_battery> <initial_battery>
+1 1 MEDICAL 100 100
+2 6 FIRE 120 120
+3 10 SUPPLY 150 60
+4 13 SEARCH 90 25
+5 4 GENERAL 110 110
+
+REQUESTS 25
+# <id> <report_time> <location> <category> <urgency> <duration_steps>
+1 0 3 MEDICAL 4 3
+2 0 6 FIRE 4 3
+3 0 9 SUPPLY 4 3
+4 0 12 SEARCH 4 3
+5 0 15 MEDICAL 4 3
+6 2 20 MEDICAL 5 4
+7 4 13 SEARCH 5 4
+8 10 19 SEARCH 5 3
+9 13 18 MEDICAL 4 2
+10 14 16 SUPPLY 3 6
+11 15 16 MEDICAL 4 3
+12 22 13 SUPPLY 3 5
+13 28 17 FIRE 1 6
+14 32 11 MEDICAL 4 2
+15 44 3 SEARCH 4 4
+16 60 5 SEARCH 4 6
+17 61 14 FIRE 2 2
+18 63 5 MEDICAL 2 3
+19 66 19 MEDICAL 1 5
+20 70 19 FIRE 1 5
+21 71 7 SUPPLY 2 3
+22 80 8 FIRE 3 6
+23 82 10 FIRE 5 3
+24 86 7 SEARCH 4 2
+25 89 18 FIRE 1 5
+
+EVENTS 18
+# <time> <BLOCK|UNBLOCK> <connection_id>
+# <time> <STATION_DOWN|STATION_UP> <location_id>
+# <time> SET_URGENCY <request_id> <new_urgency>
+# <time> <ROBOT_OFFLINE|ROBOT_ONLINE> <robot_id>
+1 BLOCK 1
+5 STATION_DOWN 6
+5 STATION_DOWN 10
+20 ROBOT_OFFLINE 1
+20 ROBOT_OFFLINE 2
+20 ROBOT_OFFLINE 3
+20 ROBOT_OFFLINE 4
+20 ROBOT_OFFLINE 5
+30 SET_URGENCY 10 5
+35 ROBOT_ONLINE 1
+35 ROBOT_ONLINE 2
+35 ROBOT_ONLINE 3
+35 ROBOT_ONLINE 4
+35 ROBOT_ONLINE 5
+40 UNBLOCK 1
+45 STATION_UP 6
+60 UNBLOCK 28
+70 STATION_UP 10
+
+END
