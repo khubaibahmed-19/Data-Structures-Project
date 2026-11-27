@@ -2,7 +2,7 @@
 
 DS Lab semester project, Fall 2026.
 
-Group: Abdullah Shahzad ([roll no]), Khubaib Ahmed (25I-0016), [third member] ([roll no])
+Group: Abdullah Shahzad (25I-0063), Khubaib Ahmed (25I-0016)
 
 A rescue robot simulator in C++. It reads a city map, robots, rescue requests and events from a text file, then runs the rescue step by step. It writes a log of everything that happened and the final statistics.
 
